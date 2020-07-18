@@ -173,7 +173,7 @@ function draw(){
 		score = score+1;
 		count= true;
 	}
-	if(score>40 && dy<35){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
+	if(score>40 && dy<30){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
 		dy=15+(score-40-(score-40)%ddy)/ddy; //mod so that the increase in speed happens incrementally
 	}
 	console.log(dy); //debug
