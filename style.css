@@ -2,14 +2,12 @@ body {
 	background: white;
 }
 	
-h1 {
+h1, h3, p {
 	font-family: Lucida Console;
+	 line-height: 2px;
 
 }
 
-p {
-	font-family: Lucida Console;
-}
 
 canvas {
 	border: 5px solid black;
