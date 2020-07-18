@@ -1,9 +1,10 @@
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
-c.lineWidth=3;
+c.lineWidth=4;
 
-c.clearRect(0,0,400,600);
 
+/*
+//template trials to plan the game layout
 c.fillRect(91,500,18,70);
 c.fillRect(191,500,18,70);
 c.fillRect(291,500,18,70);
@@ -17,7 +18,7 @@ c.strokeRect(283,500,35,70);
 c.strokeRect(65,500,70,70);
 c.strokeRect(165,500,70,70);
 c.strokeRect(265,500,70,70);
-//template trials 
+
 /*
 c.font = "15px Lucida Console";
 c.textAlign = "right";
@@ -26,7 +27,7 @@ c.fillText(33,400,30);
 */
 
 //key that player presses
-let key="None"; 
+let key="KeyS"; 
 
 //game score
 let score=0;
@@ -34,40 +35,156 @@ let score=0;
 //which key the player presses. Everytime a key is pressed, the "key" var is updated with that value e.g: KeyS
 document.addEventListener("keydown", direction);
 function direction(event){
-	if (event.code== "KeyA" || event.code== "KeyS" || event.code== "KeyD" || event.code== "KeyQ" || event.code== "KeyW" || event.code== "KeyE"){
+	if (event.code== "KeyA" || event.code== "KeyS" || event.code== "KeyD" || event.code== "KeyJ" || event.code== "KeyK" || event.code== "KeyL" || event.code=="Space"){
 		key = event.code;
-		alert(key); //debugging
+		//alert(key); //debugging
 	}
 }
 
-//draw the player
+//to prevent the page from scrolling down when space is hit, which is somethign most/all browsers do
+window.addEventListener('keydown', space); 
+function space(event) {
+  if(event.code == "Space") {
+    event.preventDefault();
+  }
+}
+
+//draws the player
 function drawPlayer(){
 	if (key == "KeyA") {
-		c.fillRect(65,500,70,70);
+		c.strokeRect(65,500,70,70);
 	} else if (key == "KeyS") {
-		c.fillRect(165,500,70,70);
+		c.strokeRect(165,500,70,70);
 	} else if (key == "KeyD") {
-		c.fillRect(265,500,70,70);
-	} else if (key == "KeyQ") {
-		c.fillRect(83,500,36,70);
-		c.fillRect(183,500,36,70);
-	} else if (key == "KeyE") {
-		c.fillRect(183,500,36,70);
-		c.fillRect(283,500,36,70);
-	} else if (key == "KeyW") {
-		c.fillRect(91,500,18,70);
-		c.fillRect(191,500,18,70);
-		c.fillRect(291,500,18,70);
+		c.strokeRect(265,500,70,70);
+	} else if (key == "KeyJ") {
+		c.strokeRect(83,500,35,70);
+		c.strokeRect(183,500,35,70);
+	} else if (key == "KeyL") {
+		c.strokeRect(183,500,35,70);
+		c.strokeRect(283,500,35,70);
+	} else if (key == "KeyK") {
+		c.strokeRect(83,500,35,70);
+		c.strokeRect(283,500,35,70);
+	} else if (key == "Space") { //70/3 is ~23, not 18 but I did this so that the 1/3 square is visually different from the 1/2 square so that players see it easily
+		c.strokeRect(91,500,18,70);
+		c.strokeRect(191,500,18,70);
+		c.strokeRect(291,500,18,70);
 	}
 }
 
-//the function that defines the opponent
-function bad() {
-	let type = Math.floor(Math.random() * 6);
-	alert(type);
+//draws the score
+function drawScore(){
+	c.font = "15px Lucida Console";
+	c.textAlign = "right";
+	c.fillText("Score",400,15);
+	c.fillText("",400,15);
+	c.fillText(score,400,30);
+}
+
+
+
+//draws
+function drawFilled(type, y){
+	if (type == 0){ //for A
+		c.fillRect(165,y,70,70);
+		c.fillRect(265,y,70,70);
+	} else if (type == 1) { //for S
+		c.fillRect(65,y,70,70);
+		c.fillRect(265,y,70,70);
+	} else if (type == 2) { //for D
+		c.fillRect(65,y,70,70);
+		c.fillRect(165,y,70,70);
+	} else if (type == 3) { //for J
+		c.fillRect(265,y,70,70);
+		c.fillRect(65,y,18,70);
+		c.fillRect(118,y,18,70);
+		c.fillRect(165,y,18,70);
+		c.fillRect(218,y,18,70);
+	} else if (type == 4) { //for L
+		c.fillRect(65,y,70,70);
+		c.fillRect(165,y,18,70);
+		c.fillRect(218,y,18,70);
+		c.fillRect(265,y,18,70);
+		c.fillRect(318,y,18,70);
+	} else if (type == 5) { //for K 
+		c.fillRect(65,y,70,70);
+		c.fillRect(165,y,18,70);
+		c.fillRect(218,y,18,70);
+		c.fillRect(265,y,18,70);
+		c.fillRect(318,y,18,70);
+	}
+}
+
+
+//the function that defines the filled rectangles (ennemi) for the first 10 points
+//Only filled rectangles corresponding to A,S,D
+function rand() {
+	return Math.floor(Math.random() * 3);
 }		
 
-
-function draw(){
-		
+//the function that defines the filled rectangles (ennemi) from 10 to 20 points
+//Only filled rectangles corresponding to A,S,D,J,L
+function rand1() {
+	return Math.floor(Math.random() * 5);
 }
+
+//the function that defines the filled rectangles (ennemi) from 20 to 30 points
+//Only filled rectangles corresponding to A,S,D,J,K,L
+function rand2() {
+	return Math.floor(Math.random() * 6);
+}
+//the function that defines the filled rectangles (ennemi) from 30 points to ∞
+function rand3() {
+	return Math.floor(Math.random() * 7);
+}
+
+//there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
+let y1 = -72;
+let y2 = -72;
+let filled1 = true; //boolean for the first wave of filled rectangles
+let filled2 = false; //boolean for the second wave of filled rectangles
+let type=1; //first wave is the easiest one
+let dy=10; //goes from 10 to 35
+let sep=300; //separation between the two waves goes from 400 to 280
+let count1=true;//booleans for counting score
+let count2=false;
+
+//each frame is being drawn here
+function draw(){
+	c.clearRect(0,0,400,600); //erases previous frame
+	drawPlayer();
+	drawScore();
+	if (filled1 == true) {
+		drawFilled(type,y1);
+		y1=y1+dy/5;
+	}
+	if (filled2 == true) {
+		drawFilled(type2,y2);
+		y2=y2+dy/5;
+	}
+	if (y1>=sep && y2>y1) {
+		y2=-72;
+		type2= rand1();
+	} else if (y1>=sep && filled2 == false) {
+		y2=-72;
+		filled2=true;
+		type2= rand1();
+	}
+	if (y2>=sep && y1>y2) {
+		y1=-72;
+		type= rand1();
+	} 
+	if (y1>570 && count1==true) {
+		score = score+1;
+		count1=false;
+		count2=true;
+	} else if (y2>570 && count2==true)
+		score = score+1;
+		count1=true;
+		count2=false;
+	
+}
+
+//game has an image drawn every 25 milliseconds
+let game = setInterval(draw,10);
