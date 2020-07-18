@@ -2,22 +2,14 @@ body {
 	background: white;
 }
 
-h1 {
-	font-family: Lucida Console;
-	font-size: 100 px;
-	line-height: 15px;
-	margin-bottom: 0px
-	margin-top: 0px;
-
-}	
-h3, p {
+	
+h1, h3, p {
 	font-family: Lucida Console;
 	line-height: 15px;
 	margin-bottom: 0px
 	margin-top: 0px;
 
 }
-
 
 canvas {
 	border: 5px solid black;
