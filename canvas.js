@@ -2,30 +2,6 @@ var canvas = document.querySelector('canvas');
 var c = canvas.getContext('2d');
 c.lineWidth=4;
 
-
-/*
-//template trials to plan the game layout
-c.fillRect(91,500,18,70);
-c.fillRect(191,500,18,70);
-c.fillRect(291,500,18,70);
-
-
-c.strokeRect(83,500,35,70);
-c.strokeRect(183,500,35,70);
-c.strokeRect(283,500,35,70);
-
-
-c.strokeRect(65,500,70,70);
-c.strokeRect(165,500,70,70);
-c.strokeRect(265,500,70,70);
-
-/*
-c.font = "15px Lucida Console";
-c.textAlign = "right";
-c.fillText("Score",400,15);
-c.fillText(33,400,30);
-*/
-
 //key that player presses
 let key="KeyS"; 
 
@@ -37,7 +13,6 @@ document.addEventListener("keydown", direction);
 function direction(event){
 	if (event.code== "KeyA" || event.code== "KeyS" || event.code== "KeyD" || event.code== "KeyJ" || event.code== "KeyK" || event.code== "KeyL" || event.code=="Space"){
 		key = event.code;
-		//alert(key); //debugging
 	}
 }
 
@@ -84,7 +59,7 @@ function drawScore(){
 
 
 
-//draws
+//draws filled rectangles/obstacles
 function drawFilled(type, y){
 	if (type == 0){ //for A
 		c.fillRect(165,y,70,70);
@@ -117,24 +92,24 @@ function drawFilled(type, y){
 }
 
 
-//the function that defines the filled rectangles (ennemi) for the first 10 points
-//Only filled rectangles corresponding to A,S,D
+//the function that defines the filled rectangles (obstacles) for the first 10 points
+//Only filled rectangles corresponding to A,S,D player moves
 function rand() {
 	return Math.floor(Math.random() * 3);
 }		
 
-//the function that defines the filled rectangles (ennemi) from 10 to 20 points
-//Only filled rectangles corresponding to A,S,D,J,L
+//the function that defines the filled rectangles (obstacles) from 10 to 20 points
+//Only filled rectangles corresponding to A,S,D,J,L player moves
 function rand1() {
 	return Math.floor(Math.random() * 5);
 }
 
-//the function that defines the filled rectangles (ennemi) from 20 to 30 points
-//Only filled rectangles corresponding to A,S,D,J,K,L
+//the function that defines the filled rectangles (obstacles) from 20 to 30 points
+//Only filled rectangles corresponding to A,S,D,J,K,L player moves
 function rand2() {
 	return Math.floor(Math.random() * 6);
 }
-//the function that defines the filled rectangles (ennemi) from 30 points to ∞
+//the function that defines the filled rectangles (obstacles) from 30 points to ∞
 function rand3() {
 	return Math.floor(Math.random() * 7);
 }
@@ -145,7 +120,7 @@ let y2 = -72; //position of the second wave of filled rectangle
 let filled1 = true; //boolean for the first wave of filled rectangles
 let filled2 = false; //boolean for the second wave of filled rectangles
 let type=1; //first wave is the easiest one
-let dy=10; //goes from 10 to 35
+let dy=35; //goes from 10 to 35
 let sep=300; //separation between the two waves goes from 400 to 280
 let count=true;//booleans for counting score
 
@@ -154,7 +129,7 @@ function draw(){
 	c.clearRect(0,0,400,600); //erases previous frame
 	drawPlayer();
 	drawScore();
-	if (filled1 == true) {
+	if (filled1 == true &&) {
 		drawFilled(type,y1);
 		y1=y1+dy/5;
 	}
@@ -174,14 +149,14 @@ function draw(){
 		y1=-72;
 		type= rand1();
 	} 
-	if (y1>571 && count==true) {
+	if (y1>570 && count==true) {
 		score = score+1;
 		count= false;
-	} else if (y2>571 && count==false)
+	} else if (y2>570 && count==false) {
 		score = score+1;
 		count= true;
-	console.log(count);
+	}
 }
 
-//game has an image drawn every 25 milliseconds
+//game has an image drawn every 100 milliseconds
 let game = setInterval(draw,10);
