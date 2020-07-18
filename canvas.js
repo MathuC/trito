@@ -83,45 +83,61 @@ function drawFilled(type, y){
 		c.fillRect(265,y,18,70);
 		c.fillRect(318,y,18,70);
 	} else if (type == 5) { //for K 
-		c.fillRect(65,y,70,70);
-		c.fillRect(165,y,18,70);
-		c.fillRect(218,y,18,70);
+		c.fillRect(165,y,70,70);
+		c.fillRect(65,y,18,70);
+		c.fillRect(118,y,18,70);
 		c.fillRect(265,y,18,70);
 		c.fillRect(318,y,18,70);
+	} else if (type == 6) { //for Space
+		c.fillRect(65,y,26,70);
+		c.fillRect(109,y,26,70);
+		c.fillRect(165,y,26,70);
+		c.fillRect(209,y,26,70);
+		c.fillRect(265,y,26,70);
+		c.fillRect(309,y,26,70);
 	}
 }
 
 
-//the function that defines the filled rectangles (obstacles) for the first 10 points
-//Only filled rectangles corresponding to A,S,D player moves
+//the function that defines the filled rectangles (obstacles)
 function rand() {
-	return Math.floor(Math.random() * 3);
-}		
-
-//the function that defines the filled rectangles (obstacles) from 10 to 20 points
-//Only filled rectangles corresponding to A,S,D,J,L player moves
-function rand1() {
-	return Math.floor(Math.random() * 5);
+	if (score>=0 && score<=10 ){
+		return Math.floor(Math.random() * 3);
+	} else if (score>10 && score<=20) {
+		return (Math.floor(Math.random() * 3)+3);
+	} else if (score>20 && score<40) {
+		return Math.floor(Math.random() * 6);
+	} else if (score==40) {
+		return 6;
+	} else if (score>40){
+		return Math.floor(Math.random() * 7);
+	}
 }
 
-//the function that defines the filled rectangles (obstacles) from 20 to 30 points
-//Only filled rectangles corresponding to A,S,D,J,K,L player moves
+//same rand function again to increase the randomness
 function rand2() {
-	return Math.floor(Math.random() * 6);
-}
-//the function that defines the filled rectangles (obstacles) from 30 points to ∞
-function rand3() {
-	return Math.floor(Math.random() * 7);
-}
+	if (score>=0 && score<=10 ){
+		return Math.floor(Math.random() * 3);
+	} else if (score>10 && score<=20) {
+		return (Math.floor(Math.random() * 3)+3);
+	} else if (score>20 && score<40) {
+		return Math.floor(Math.random() * 6);
+	} else if (score==40) {
+		return 6;
+	} else if (score>40){
+		return Math.floor(Math.random() * 7);
+	}
+}			      
 
 //there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
 let y1 = -72; //position of the first wave of filled rectangle
 let y2 = -72; //position of the second wave of filled rectangle
 let filled1 = true; //boolean for the first wave of filled rectangles
 let filled2 = false; //boolean for the second wave of filled rectangles
-let type=1; //first wave is the easiest one
-let dy=35; //goes from 10 to 35
-let sep=300; //separation between the two waves goes from 400 to 280
+let dy=15; //speed of the waves
+let ddy=8; //after a score of 50, the speed will increase, so this var is the acceleration of the waves till they reach a maximum speed
+let sep=325; //separation between the two waves goes from 400 to 350
+let type=1; //first wave is the easiest one (Answer: KeyS)
 let count=true;//booleans for counting score
 
 //each frame is being drawn here
@@ -129,7 +145,7 @@ function draw(){
 	c.clearRect(0,0,400,600); //erases previous frame
 	drawPlayer();
 	drawScore();
-	if (filled1 == true &&) {
+	if (filled1 == true) {
 		drawFilled(type,y1);
 		y1=y1+dy/5;
 	}
@@ -139,23 +155,28 @@ function draw(){
 	}
 	if (y1>=sep && y2>y1) {
 		y2=-72;
-		type2= rand1();
+		type2= rand2();
 	} else if (y1>=sep && filled2 == false) {
 		y2=-72;
 		filled2=true;
-		type2= rand1();
+		type2= rand2();
 	}
 	if (y2>=sep && y1>y2) {
 		y1=-72;
-		type= rand1();
+		type= rand();
 	} 
 	if (y1>570 && count==true) {
 		score = score+1;
 		count= false;
-	} else if (y2>570 && count==false) {
+	}
+	if (y2>570 && count==false) {
 		score = score+1;
 		count= true;
 	}
+	if(score>40 && dy<35){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
+		dy=15+(score-40-(score-40)%ddy)/ddy; //mod so that the increase in speed happens incrementally
+	}
+	console.log(dy); //debug
 }
 
 //game has an image drawn every 100 milliseconds
