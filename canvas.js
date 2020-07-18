@@ -140,15 +140,14 @@ function rand3() {
 }
 
 //there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
-let y1 = -72;
-let y2 = -72;
+let y1 = -72; //position of the first wave of filled rectangle
+let y2 = -72; //position of the second wave of filled rectangle
 let filled1 = true; //boolean for the first wave of filled rectangles
 let filled2 = false; //boolean for the second wave of filled rectangles
 let type=1; //first wave is the easiest one
 let dy=10; //goes from 10 to 35
 let sep=300; //separation between the two waves goes from 400 to 280
-let count1=true;//booleans for counting score
-let count2=false;
+let count=true;//booleans for counting score
 
 //each frame is being drawn here
 function draw(){
@@ -175,15 +174,13 @@ function draw(){
 		y1=-72;
 		type= rand1();
 	} 
-	if (y1>570 && count1==true) {
+	if (y1>571 && count==true) {
 		score = score+1;
-		count1=false;
-		count2=true;
-	} else if (y2>570 && count2==true)
+		count= false;
+	} else if (y2>571 && count==false)
 		score = score+1;
-		count1=true;
-		count2=false;
-	
+		count= true;
+	console.log(count);
 }
 
 //game has an image drawn every 25 milliseconds
