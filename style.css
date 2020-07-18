@@ -4,11 +4,17 @@ body {
 	
 h1, h3, p {
 	font-family: Lucida Console;
-	line-height: 2px;
+	line-height: 15px;
+	margin-bottom: 0px
+	margin-top: 0px;
 
 }
 
 
 canvas {
 	border: 5px solid black;
+}
+
+.boxed {
+  border: 2px solid black;
 }
