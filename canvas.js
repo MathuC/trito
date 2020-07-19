@@ -3,7 +3,7 @@ var c = canvas.getContext('2d');
 
  
 //game score
-let score=999998;
+let score=0;
 
 //When score is a hundred multiple the score is displayed in big accompanied with this image
 var banner = new Image();
@@ -24,6 +24,13 @@ function space(event) {
     event.preventDefault();
   }
 }
+
+//load audio fileSize
+let hit = new Audio();
+hit.src="audio/hit.wav";
+
+
+
 
 //draws the player
 function drawPlayer(){
@@ -128,20 +135,6 @@ function rand() {
 	}
 }
 
-//same rand function again to increase the randomness and decrease repeated waves
-function rand2() {
-	if (score>=0 && score<=10 ){
-		return Math.floor(Math.random() * 3);
-	} else if (score>10 && score<=20) {
-		return (Math.floor(Math.random() * 3)+3);
-	} else if (score>20 && score<40) {
-		return Math.floor(Math.random() * 6);
-	} else if (score==40) {
-		return 6;
-	} else if (score>40){
-		return Math.floor(Math.random() * 7);
-	}
-}
 
 function drawHundred(y) { //when you reach mutliples of 100, you get a little break and your score is shown in the game in BIG instead of a wave
 	c.fillStyle="black";
@@ -168,6 +161,7 @@ let hundred=false;//boolean for the function drawHundred(y) to be called
 
 function gameOver(){
 	clearInterval(trito);
+	hit.play(); //hit audio
 	setTimeout(function(){c.clearRect(0,0,400,600);},600); //erases previous frame after 0.6 seconds
 	setTimeout(function(){ //displays Game Over and score after 0.6s
 		c.fillStyle="black";
@@ -176,7 +170,6 @@ function gameOver(){
 		c.fillText("Game Over",200,300);
 		c.font = "15px Lucida Console";
 		c.fillText("Score: "+score,200,315);},600
-		
 	)
 }
 
@@ -224,7 +217,7 @@ function draw(){
 	}
 	//speed starts to go up from score=40 to around score=800. 
 	if(score>30 && score<=1000){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
-		dy=15+Math.floor(0.8*(Math.sqrt(score-40))); //using a squrt function made a lot of sense since you want the speed to increase 
+		dy=15+Math.floor(0.8*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
 		//quickly at the beginning so it's not boring but you want it to stop increasing so quickly towards the end since the difficulty increase between 15 and 20 is a lot lower than the difficulty increase between 30 and 35
 	} else if (score>1000){ //for debuggin purpose 
 		dy=39;
@@ -247,6 +240,10 @@ function draw(){
 
 //game has an image drawn every 100 milliseconds
 let key="KeyS"; //player's square starts in the middle by default
+let k=2;
+alert(k);
 let trito = setInterval(draw,10);
+k=3;
+alert(k);
 
 
