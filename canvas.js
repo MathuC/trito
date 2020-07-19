@@ -9,11 +9,21 @@ let score=0;
 var banner = new Image();
 banner.src = "img/banner1.png";
 
+let game= false;//if the game has started 
+
+let load=false;//when the game is done this will be set to true so that the player can refresh the page and be able to replay more easily
+
 //which key the player presses. Everytime a key is pressed, the "key" var is updated with that value e.g: KeyS
 document.addEventListener("keydown", direction);
 function direction(event){
 	if (event.code== "KeyA" || event.code== "KeyS" || event.code== "KeyD" || event.code== "KeyJ" || event.code== "KeyK" || event.code== "KeyL" || event.code=="Space"){
 		key = event.code;
+		if (event.code=="Space" && game==false) {
+			game = true;
+			gameStart();
+		} else if (event.code=="Space" && load==true){
+			location.reload(); //go back to start menu
+		}
 	}
 }
 
@@ -28,8 +38,10 @@ function space(event) {
 //load audio fileSize
 let hit = new Audio();
 hit.src="audio/hit.wav";
-
-
+let go = new Audio();
+go.src="audio/gameOver.wav"; //my browser doesn't loop well so I had to cut off a bit of the loop at the end on flstudio
+let track = new Audio();
+track.src= "audio/where.wav";
 
 
 //draws the player
@@ -135,7 +147,6 @@ function rand() {
 	}
 }
 
-
 function drawHundred(y) { //when you reach mutliples of 100, you get a little break and your score is shown in the game in BIG instead of a wave
 	c.fillStyle="black";
 	c.font = "65px Lucida Console";
@@ -148,12 +159,12 @@ function drawHundred(y) { //when you reach mutliples of 100, you get a little br
 //there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
 let y1 = -72; //position of the first wave of filled rectangle
 let y2 = -72; //position of the second wave of filled rectangle
-let y3 = -90;
+let y3 = -125; //since it's height is slightly bigger than the waves is starts a little higher
 let filled1 = true; //boolean for the first wave of filled rectangles
 let filled2 = false; //boolean for the second wave of filled rectangles
-let dy=15; //speed of the waves
+let dy=18; //speed of the waves
 let ddy=8; //after a score of 50, the speed will increase, so this var is the acceleration of the waves till they reach a maximum speed
-let sep=325; //separation between the two waves goes from 400 to 350
+let sep=350; //separation between the two waves
 let type=1; //first wave is the easiest one (Answer: KeyS)
 let type2; //since there will be two waves on the same screen type and type2 are distinct types
 let count=true;//booleans for counting score
@@ -161,7 +172,8 @@ let hundred=false;//boolean for the function drawHundred(y) to be called
 
 function gameOver(){
 	clearInterval(trito);
-	hit.play(); //hit audio
+	track.pause(); //stopped the game soundtrack
+	hit.play(); //hit sound
 	setTimeout(function(){c.clearRect(0,0,400,600);},600); //erases previous frame after 0.6 seconds
 	setTimeout(function(){ //displays Game Over and score after 0.6s
 		c.fillStyle="black";
@@ -169,8 +181,22 @@ function gameOver(){
 		c.textAlign = "center";
 		c.fillText("Game Over",200,300);
 		c.font = "15px Lucida Console";
-		c.fillText("Score: "+score,200,315);},600
-	)
+		c.fillText("Score: "+score,200,315);}
+		,600);
+	setTimeout(function(){ //gameOver soundtrack
+		go.play(); //to stop it, you have to go.pause(); and sounds/audio work only on myu browser if a key was pressed or if a mouse click happened on the page after it loaded
+		go.loop=true;}
+		,800);
+	
+	setTimeout(function(){highScore();},5000); //Instead of this I should do an alert to ask the player a second later if they want to register their score. 
+}//If they accept, I take their username and then show them the highscore board
+//If they refuse, I just switch to the highscore board
+//On the highscore board there will be a saying: Press space if you want to go back to the start menu.
+										
+
+function highScore(){ //to display the highscores at the very end
+	load=true;
+	c.clearRect(0,0,400,600);
 }
 
 //each frame is being drawn here
@@ -191,7 +217,7 @@ function draw(){
 	}
 	if (y3>700) {
 		hundred=false;
-		y3=-72
+		y3=-125; //since it's height is slightly bigger than the waves is starts a little higher
 	}
 	if (y1>=sep && y2>y1) {
 		y2=-72;
@@ -217,11 +243,9 @@ function draw(){
 	}
 	//speed starts to go up from score=40 to around score=800. 
 	if(score>30 && score<=1000){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
-		dy=15+Math.floor(0.8*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
+		dy=18+Math.floor(0.4*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
 		//quickly at the beginning so it's not boring but you want it to stop increasing so quickly towards the end since the difficulty increase between 15 and 20 is a lot lower than the difficulty increase between 30 and 35
-	} else if (score>1000){ //for debuggin purpose 
-		dy=39;
-	}
+	} 
 	drawPlayer(); //draws player on top of everyting else
 	console.log("Speed:"+dy); //debugging
 
@@ -238,12 +262,46 @@ function draw(){
 	}
 }
 
-//game has an image drawn every 100 milliseconds
-let key="KeyS"; //player's square starts in the middle by default
-let k=2;
-alert(k);
-let trito = setInterval(draw,10);
-k=3;
-alert(k);
+//The start screen
+function startScreen(){
+	c.fillStyle="black";
+	c.font = "25px Lucida Console";
+	c.textAlign = "center";
+	c.fillText("Press  Space  to start",200,300);
+	c.font = "10px Lucida Console";
+	c.fillText("Read the instructions below if it's your first time.",200,330);
+	c.lineWidth=3;
+	c.strokeRect(118,280,120,26);
+}
 
+function gameStart(){
+	key="KeyS"; //player's square starts in the middle by default
+	//This is the game and it has an image drawn every 10 milliseconds
+	track.play()
+	track.loop=true;
+	trito = setInterval(draw,10);
+}
+
+let key;
+let trito;
+
+startScreen();
+
+/*
+Big error1: 
+I put 
+let trito;
+inside the function gameStart.
+
+Big error2:
+I put 
+let key;
+inside the function gameStart.
+
+Big error3:
+I did not make a boolean "game" which checks if game has started (spacebar has been pushed or not) or not to eliminate the 
+possibility of one key to be used for two things (trisected square & gamestart) in the 
+eventlistener direction.
+
+*/
 
