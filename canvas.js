@@ -154,7 +154,7 @@ function drawHundred(y) {
 	c.fillStyle="black";
 	c.font = "65px Lucida Console";
 	c.textAlign = "center";
-	const temp= score+1-(score+1)%100; //So the score doesn't change in the middle of the screen
+	const temp= score+1-(score+1)%50; //So the score doesn't change in the middle of the screen
 	c.drawImage(banner,10,y-113,380,170);
 	c.fillText(temp,200,y);
 }	
@@ -187,10 +187,10 @@ function draw(){
 		filled2=true;
 		type2= rand();
 	} 
-	if (y2>=sep && y1>y2 && score%100!=99) {
+	if (y2>=sep && y1>y2 && score%50!=49) {
 		y1=-72;
 		type= rand();
-	} else if (score%100==99) {
+	} else if (score%50==49) {
 		hundred= true;
 	}
 	if (y1>570 && count==true) {
@@ -201,8 +201,8 @@ function draw(){
 		score = score+1;
 		count= true;
 	}
-	//speed starts to go up from score=40 to around score=800. 
-	if(score>30 && score<=1000){ //speeding up the waves after the player reach a score of 50, till the speed of the waves dy reaches a maximum
+	//speed starts to go up from score=30 
+	if(score>30){ //speeding up the waves after the player reach a score of 30
 		dy=18+Math.floor(0.4*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
 		//quickly at the beginning so it's not boring but you want it to stop increasing so quickly towards the end since the difficulty increase between 15 and 20 is a lot lower than the difficulty increase between 30 and 35
 	} 
@@ -284,7 +284,7 @@ var banner = new Image();
 banner.src = "img/banner.png";
 
 //game score
-let score=0;
+let score=1048;
 
 let game= false;//if the game has started 
 let load=false;//when the game is done this will be set to true so that the player can refresh the page and be able to replay more easily
