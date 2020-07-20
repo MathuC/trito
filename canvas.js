@@ -15,6 +15,8 @@ track.src= "audio/corona.wav"; //background music for during the game
 track.volume=0.13;
 let point= new Audio();
 point.src= "audio/point.wav";
+let clap= new Audio();
+clap.src="audio/clap.wav";
 
 //game score
 let score=0;
@@ -35,6 +37,7 @@ let type=1; //first wave is the easiest one (Answer: KeyS)
 let type2; //since there will be two waves on the same screen type and type2 are distinct types
 let count=true;//booleans for counting score
 let fifty=false;//boolean for the function drawFfity(y) to be called
+let name; //name of the player
 
 let key; //global variable which stores the last key you pressed
 let trito; //global variable that will store the interval (game loop)
@@ -241,6 +244,9 @@ function draw(){
 		point.play();
 		score = score+1;
 		count= true;
+		if (score%50==0){
+			clap.play();
+		}
 	}
 	//speed starts to go up from score=30 
 	if(score>30){ //speeding up the waves after the player reach a score of 30
@@ -253,12 +259,12 @@ function draw(){
 	//GameOver
 	if (y1>430 && y1<570){ 
 		if ((type==0 && key!="KeyA") || (type==1 && key!="KeyS") || (type==2 && key!="KeyD") || (type==3 && key!="KeyJ") || (type==4 && key!="KeyL") || (type==5 && key!="KeyK") || (type==6 && key!="Space")) {
-			//gameOver(); //stops animation
+			gameOver(); //stops animation
 		}
 	}
 	if (y2>432 && y2<570) {
 		if ((type2==0 && key!="KeyA") || (type2==1 && key!="KeyS") || (type2==2 && key!="KeyD") || (type2==3 && key!="KeyJ") || (type2==4 && key!="KeyL") || (type2==5 && key!="KeyK") || (type2==6 && key!="Space")) {
-			//gameOver(); //stops animation
+			gameOver(); //stops animation
 		}
 	}
 }
@@ -279,11 +285,17 @@ function gameOver(){
 	setTimeout(function(){ //gameOver soundtrack
 		go.play(); //to stop it, you have to go.pause(); and sounds/audio work only on myu browser if a key was pressed or if a mouse click happened on the page after it loaded
 		go.loop=true;}
-		,800);
-	setTimeout(function(){highScore();},2000); //Instead of this I should do an alert to ask the player a second later if they want to register their score. 
-}//If they accept, I take their username and then show them the highscore board
+		,600);
+	setTimeout(function(){
+		name = prompt("Enter your name/alias for the leaderboard");
+		highScore();}
+		,2000); 
+}
+//Instead of this I should do an alert to ask the player a second later if they want to register their score. 
+//If they accept, I take their username and then show them the highscore board
 //If they refuse, I just switch to the highscore board
 //On the highscore board there will be a saying: Press space if you want to go back to the start menu.
+//Only ask if they are in the top 10.
 
 //flashing text at the bottom of the screen of highscores saying you can press any keys to go back to the start menu
 function flashingText(){
