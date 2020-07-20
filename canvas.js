@@ -1,6 +1,45 @@
 var canvas = document.getElementById("trito");
 var c = canvas.getContext('2d');
 
+//When score is a fifty multiple the score is displayed in big accompanied with this image
+var banner = new Image();
+banner.src = "img/banner.png";
+
+//load audio fileSize
+let hit = new Audio();
+hit.src="audio/hit.wav";
+let go = new Audio();
+go.src="audio/gameOver.wav"; //my browser doesn't loop well so I had to cut off a bit of the loop at the end on flstudio
+let track = new Audio(); 
+track.src= "audio/corona.wav"; //background music for during the game
+track.volume=0.13;
+let point= new Audio();
+point.src= "audio/point.wav";
+
+//game score
+let score=0;
+
+let game= false;//if the game has started 
+let load=false;//when the game is done this will be set to true so that the player can refresh the page and be able to replay more easily
+
+//there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
+let y1 = -72; //position of the first wave of filled rectangle
+let y2 = -72; //position of the second wave of filled rectangle
+let y3 = -125; //since it's height is slightly bigger than the waves is starts a little higher
+let filled1 = true; //boolean for the first wave of filled rectangles
+let filled2 = false; //boolean for the second wave of filled rectangles
+let dy=18; //speed of the waves
+let ddy=8; //after a score of 50, the speed will increase, so this var is the acceleration of the waves till they reach a maximum speed
+let sep=350; //separation between the two waves
+let type=1; //first wave is the easiest one (Answer: KeyS)
+let type2; //since there will be two waves on the same screen type and type2 are distinct types
+let count=true;//booleans for counting score
+let fifty=false;//boolean for the function drawFfity(y) to be called
+
+let key; //global variable which stores the last key you pressed
+let trito; //global variable that will store the interval (game loop)
+startScreen(); //BEGINNING OF EVERYTHING
+
 
 //which key the player presses. Everytime a key is pressed, the "key" var is updated with that value e.g: KeyS
 document.addEventListener("keydown", direction);
@@ -9,7 +48,7 @@ function direction(event){
 		key = event.code;
 		if (event.code=="Space" && game==false) {
 			game = true;
-			gameStart();
+			gameStart(); 
 		}
 	}
 	if (load==true){
@@ -38,12 +77,12 @@ function startScreen(){
 	c.strokeRect(118,280,120,26);
 }
 
+//This is the nearly the whole game and it has an image drawn every 10 milliseconds
 function gameStart(){
 	key="KeyS"; //player's square starts in the middle by default
-	//This is the game and it has an image drawn every 10 milliseconds
 	track.play()
 	track.loop=true;
-	trito = setInterval(draw,10);
+	trito = setInterval(draw,10); 
 }
 
 //draws the player
@@ -149,8 +188,8 @@ function rand() {
 	}
 }
 
-//when you reach mutliples of 100, you get a little break and your score is shown in the game in BIG instead of a wave
-function drawHundred(y) { 
+//when you reach mutliples of 50, you get a little break and your score is shown in the game in BIG instead of a wave
+function drawFifty(y) { 
 	c.fillStyle="black";
 	c.font = "65px Lucida Console";
 	c.textAlign = "center";
@@ -171,12 +210,12 @@ function draw(){
 		drawFilled(type2,y2);
 		y2=y2+dy/5;
 	}
-	if (hundred==true) {
-		drawHundred(y3);
+	if (fifty==true) {
+		drawFifty(y3);
 		y3=y3+dy/5;
 	}
 	if (y3>700) {
-		hundred=false;
+		fifty=false;
 		y3=-125; //since it's height is slightly bigger than the waves is starts a little higher
 	}
 	if (y1>=sep && y2>y1) {
@@ -191,13 +230,15 @@ function draw(){
 		y1=-72;
 		type= rand();
 	} else if (score%50==49) {
-		hundred= true;
+		fifty= true;
 	}
 	if (y1>570 && count==true) {
+		point.play();
 		score = score+1;
 		count= false;
 	}
 	if (y2>570 && count==false) {
+		point.play();
 		score = score+1;
 		count= true;
 	}
@@ -212,12 +253,12 @@ function draw(){
 	//GameOver
 	if (y1>430 && y1<570){ 
 		if ((type==0 && key!="KeyA") || (type==1 && key!="KeyS") || (type==2 && key!="KeyD") || (type==3 && key!="KeyJ") || (type==4 && key!="KeyL") || (type==5 && key!="KeyK") || (type==6 && key!="Space")) {
-			gameOver(); //stops animation
+			//gameOver(); //stops animation
 		}
 	}
 	if (y2>432 && y2<570) {
 		if ((type2==0 && key!="KeyA") || (type2==1 && key!="KeyS") || (type2==2 && key!="KeyD") || (type2==3 && key!="KeyJ") || (type2==4 && key!="KeyL") || (type2==5 && key!="KeyK") || (type2==6 && key!="Space")) {
-			gameOver(); //stops animation
+			//gameOver(); //stops animation
 		}
 	}
 }
@@ -270,42 +311,6 @@ function highScore(){ //to display the highscores at the very end
 	load=true;
 	flashingText();
 }
-
-//load audio fileSize
-let hit = new Audio();
-hit.src="audio/hit.wav";
-let go = new Audio();
-go.src="audio/gameOver.wav"; //my browser doesn't loop well so I had to cut off a bit of the loop at the end on flstudio
-let track = new Audio(); //need to change the track to a punchy electronic beat which will macth the game, bum ts bum ts bum ts
-track.src= "audio/where.wav";
-
-//When score is a hundred multiple the score is displayed in big accompanied with this image
-var banner = new Image();
-banner.src = "img/banner.png";
-
-//game score
-let score=1048;
-
-let game= false;//if the game has started 
-let load=false;//when the game is done this will be set to true so that the player can refresh the page and be able to replay more easily
-
-//there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
-let y1 = -72; //position of the first wave of filled rectangle
-let y2 = -72; //position of the second wave of filled rectangle
-let y3 = -125; //since it's height is slightly bigger than the waves is starts a little higher
-let filled1 = true; //boolean for the first wave of filled rectangles
-let filled2 = false; //boolean for the second wave of filled rectangles
-let dy=18; //speed of the waves
-let ddy=8; //after a score of 50, the speed will increase, so this var is the acceleration of the waves till they reach a maximum speed
-let sep=350; //separation between the two waves
-let type=1; //first wave is the easiest one (Answer: KeyS)
-let type2; //since there will be two waves on the same screen type and type2 are distinct types
-let count=true;//booleans for counting score
-let hundred=false;//boolean for the function drawHundred(y) to be called
-
-let key; //global variable which stores the last key you pressed
-let trito; //global variable that will store the interval (game loop)\
-startScreen(); 
 
 
 /*
