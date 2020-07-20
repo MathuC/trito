@@ -12,7 +12,7 @@ let go = new Audio();
 go.src="audio/gameOver.wav"; //my browser doesn't loop well so I had to cut off a bit of the loop at the end on flstudio
 let track = new Audio(); 
 track.src= "audio/corona.wav"; //background music for during the game
-track.volume=0.13;
+track.volume=0.15; //it was too loud and drowned the point audio, so 15% of the original volume works
 let point= new Audio();
 point.src= "audio/point.wav";
 let clap= new Audio();
@@ -287,7 +287,7 @@ function gameOver(){
 		go.loop=true;}
 		,600);
 	setTimeout(function(){
-		name = prompt("Enter your name/alias for the leaderboard");
+		name = prompt("Enter your name/alias for the leaderboard (one word)");
 		highScore();}
 		,2000); 
 }
