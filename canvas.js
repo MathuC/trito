@@ -18,14 +18,10 @@ point.src= "audio/point.wav";
 let clap= new Audio();
 clap.src="audio/clap.wav";
 
-//game score
-let score=0;
 
-let game= false;//if the game has started 
-let load=false;//when the game is done this will be set to true so that the player can refresh the page and be able to replay more easily
-
-//there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
-let y1 = -72; //position of the first wave of filled rectangle
+let score=0;//game score
+let game= false;//if the game has started, need this since if not, everytime the trisected square command would be received, it would restart the whole game :/
+let y1 = -72; //position of the first wave of filled rectangle, there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
 let y2 = -72; //position of the second wave of filled rectangle
 let y3 = -125; //since it's height is slightly bigger than the waves is starts a little higher
 let filled1 = true; //boolean for the first wave of filled rectangles
@@ -37,12 +33,32 @@ let type=1; //first wave is the easiest one (Answer: KeyS)
 let type2; //since there will be two waves on the same screen type and type2 are distinct types
 let count=true;//booleans for counting score
 let fifty=false;//boolean for the function drawFfity(y) to be called
+let flashing= false; //if flashing text at the end is flashing
 let name; //name of the player
 
 let key; //global variable which stores the last key you pressed
 let trito; //global variable that will store the interval (game loop)
-startScreen(); //BEGINNING OF EVERYTHING
 
+startScreen(); //BEGINNING OF EVERYTHING, then addEventListener starts the whole game
+
+function reset(){ //If the player wants to play the game again
+	score=0;
+	y1 = -72; 
+	y2 = -72; 
+	y3 = -125; 
+	filled1 = true; 
+	filled2 = false; 
+	dy=18; 
+	ddy=8; 
+	sep=350; 
+	type=1; 
+	type2; 
+	count=true;
+	fifty=false;
+	if (flashing==true){
+		clearInterval(loop);
+	}
+}
 
 //which key the player presses. Everytime a key is pressed, the "key" var is updated with that value e.g: KeyS
 document.addEventListener("keydown", direction);
@@ -50,14 +66,12 @@ function direction(event){
 	if (event.code== "KeyA" || event.code== "KeyS" || event.code== "KeyD" || event.code== "KeyJ" || event.code== "KeyK" || event.code== "KeyL" || event.code=="Space"){
 		key = event.code;
 		if (event.code=="Space" && game==false) {
+			reset(); //If the player is playing multiple games
+			go.pause();
 			game = true;
 			gameStart(); 
 		}
 	}
-	if (load==true){
-		location.reload(); //this reloads the whole page, so: the player goes back to start menu from the highscore board
-	}
-	
 }
 
 //to prevent the page from scrolling down when space is hit, which is somethign most/all browsers do
@@ -287,9 +301,11 @@ function gameOver(){
 		go.loop=true;}
 		,600);
 	setTimeout(function(){
-		name = prompt("Enter your name/alias for the leaderboard (one word)");
+		if(name == null){
+			name = prompt("Enter your name/alias for the leaderboard (one word)");
+		}
 		highScore();}
-		,2000); 
+		,1800); 
 }
 //Instead of this I should do an alert to ask the player a second later if they want to register their score. 
 //If they accept, I take their username and then show them the highscore board
@@ -297,8 +313,19 @@ function gameOver(){
 //On the highscore board there will be a saying: Press space if you want to go back to the start menu.
 //Only ask if they are in the top 10.
 
+function highScore(){ //to display the highscores at the very end
+	c.clearRect(0,0,400,600);
+	c.fillStyle="black";
+	c.font = "bold 25px Lucida Console";
+	c.textAlign = "center";
+	c.fillText("High Scores",200,30);
+	flashingText();
+	game=false;
+}
+
 //flashing text at the bottom of the screen of highscores saying you can press any keys to go back to the start menu
 function flashingText(){
+	flashing=true; //if this is true, we can use clearInterval on the loop when the game starts once again
 	let count=1; //
 	loop= setInterval( function(){
 		if (count%4!=0){ //this makes the flashing text/nothing time to 3/1, so there is text 3/4 of the time and nothing 1/4 of the time
@@ -306,23 +333,13 @@ function flashingText(){
 			c.fillStyle="black";
 			c.textAlign = "center";
 			c.font = "bold 13px Lucida Console";
-			c.fillText("Press any key to go back to the start menu",200,585);
+			c.fillText("Press Space to play again",200,585);
 		} else {
 			c.clearRect(0,570,400,25); //used the console and strokeRect() to find out these coordinates
 		}
 		count=count+1;
 	;},250);	
 }	
-
-function highScore(){ //to display the highscores at the very end
-	c.clearRect(0,0,400,600);
-	c.fillStyle="black";
-	c.font = "bold 25px Lucida Console";
-	c.textAlign = "center";
-	c.fillText("High Scores",200,30);
-	load=true;
-	flashingText();
-}
 
 
 /*
