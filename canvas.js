@@ -82,9 +82,10 @@ function space(event) {
   }
 }
 
-function font(size){
-	if (navigator.console!="Win32"){
-		c.font = size+"Courier";
+//Apparently macs and pcs dont have the same font compatibilities smh, so this function changes the font to a more pretty font than Times New Roman for macs
+function fontMac(size){ 
+	if (navigator.platform!="Win32"){
+		c.font = size+" Courier";
 	}
 }
 
@@ -92,10 +93,11 @@ function font(size){
 function startScreen(){
 	c.fillStyle="black";
 	c.font = "bold 25px Lucida Console"; 
-	font("bold 25px");
+	fontMac("bold 25px");
 	c.textAlign = "center";
 	c.fillText("Press  Space  to start",200,300);
 	c.font = "10px Lucida Console";
+	fontMac("bold 10px");
 	c.fillText("Read the instructions below if it's your first time.",200,330);
 	c.lineWidth=3;
 	c.strokeRect(118,280,120,26);
@@ -191,6 +193,7 @@ function drawFilled(type, y){
 function drawScore(){
 	c.fillStyle="black";
 	c.font = "15px Lucida Console";
+	fontMac("bold 15px");
 	c.textAlign = "right";
 	c.fillText("Score",400,15);
 	c.fillText("",400,15);
@@ -298,9 +301,11 @@ function gameOver(){
 	setTimeout(function(){ //displays Game Over and score after 0.6s
 		c.fillStyle="black";
 		c.font = "25px Lucida Console";
+		fontMac("bold 25px");
 		c.textAlign = "center";
 		c.fillText("Game Over",200,300);
 		c.font = "15px Lucida Console";
+		fontMac("bold 15px");
 		c.fillText("Score: "+score,200,315);}
 		,600);
 	setTimeout(function(){ //gameOver soundtrack
@@ -324,6 +329,7 @@ function highScore(){ //to display the highscores at the very end
 	c.clearRect(0,0,400,600);
 	c.fillStyle="black";
 	c.font = "bold 25px Lucida Console";
+	fontMac("bold 25px");
 	c.textAlign = "center";
 	c.fillText("High Scores",200,30);
 	flashingText();
@@ -340,6 +346,7 @@ function flashingText(){
 			c.fillStyle="black";
 			c.textAlign = "center";
 			c.font = "bold 13px Lucida Console";
+			fontMac("bold 13px");
 			c.fillText("Press Space to play again",200,585);
 		} else {
 			c.clearRect(0,570,400,25); //used the console and strokeRect() to find out these coordinates
