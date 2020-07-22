@@ -18,9 +18,3 @@ canvas {
 .boxed {
   border: 2px solid black;
 }
-
-@media screen and (min-width: 0px) and (max-width: 400px) {
-    #order{
-        display:none;
-    }
-}

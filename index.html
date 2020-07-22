@@ -8,7 +8,7 @@
 
   	<body>
 		<center>
-			<h1>Trito</h1>
+			<h1 id="title">Trito</h1>
 		</center>
 		<br>
 		<center>
@@ -16,10 +16,10 @@
 			<script src="canvas.js"></script>
 		</center>
 		<br><br><br><br><br><br><br><br><br>
-		<h3><b>Instructions</b></h3>
+		<h3 id="subtitle"><b>Instructions</b></h3>
 		<div class="boxed">
-		<p><b>Goal</b>: Dodge the rectangles coming your way.</p>
-		<p><b>A</b>: Square to the left 
+		<p id="p1"><b>Goal</b>: Dodge the rectangles coming your way.</p>
+		<p id="p2"><b>A</b>: Square to the left 
 		<br><b>S</b>: Square to the middle 
 		<br><b>D</b>: Square to the right 
 		<br><b>J</b>: Half-squares to the left and to the middle 
@@ -28,8 +28,21 @@
 		<br><b>Space</b>: Trisected squares to all the positions </p>
 		</div>
 		<br>
-		<p><i>~  This game aims at testing and challenging your reaction time  ~</i></p>
+		<p id="p3"><i>~  This game aims at testing and challenging your reaction time  ~</i></p>
 		<br><br>
-		<p align="right" style="font-size:12px">By Mathusan Chandramohan</p>
+		<p id="p4" align="right" style="font-size:12px">By Mathusan Chandramohan</p>
+		<!-- The reason why I am putting this script here is because HTML loads from top to bottom. So I tried
+		putting this script in the canvas.js file and what happened is that the title changed font since that element was created before
+		I called the script, but for the other elements it didn't work since those elements didn't exist yet.
+		-->
+		<script> 
+		//Changing html element fonts for systems that aren't Win32 (most windows PCs overriding CSS for systems that are not Win32 which probably don't support Lucida Console Font
+		var ids=["title","subtitle","p1","p2","p3","p4"];
+		if (navigator.platform!="Win32"){
+			for(let i =0; i<6; i++){
+				document.getElementById(ids[i]).style.fontFamily="Courier";
+			}
+		}
+		</script> 
   	</body>
 </html>

@@ -355,7 +355,6 @@ function flashingText(){
 	;},250);	
 }	
 
-
 /*
 Conclusion: 
 
