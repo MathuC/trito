@@ -82,10 +82,17 @@ function space(event) {
   }
 }
 
+function font(size){
+	if (navigator.console!="Win32"){
+		c.font = size+"Courier";
+	}
+}
+
 //The start screen
 function startScreen(){
 	c.fillStyle="black";
-	c.font = "bold 25px Courier"; //I played this on my mac, this part looked weird. Apparently, mac and pcs don't have the same web font compatibility for some stupid reason, so I changed the font so it's compatible with both types of computer ugh...
+	c.font = "bold 25px Lucida Console"; 
+	font("bold 25px");
 	c.textAlign = "center";
 	c.fillText("Press  Space  to start",200,300);
 	c.font = "10px Lucida Console";
