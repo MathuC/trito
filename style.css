@@ -6,9 +6,6 @@ body {
 h1, h2, p {
 	font-family: Lucida Console;
 	line-height: 15px;
-	margin-bottom: 0px
-	margin-top: 0px;
-
 }
 
 canvas {

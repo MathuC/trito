@@ -29,6 +29,7 @@ let d;
 let s;
 let w;
 let score=0;//game score
+let hiScore=0; //highscore
 let game= false;//if the game has started, need this since if not, everytime the trisected square command would be received, it would restart the whole game :/
 let y1 = -72; //position of the first wave of filled rectangle, there will be sometimes two waves of rectangle at the same time on the screen so two sets of variables are necessary for some
 let y2 = -72; //position of the second wave of filled rectangle
@@ -43,7 +44,7 @@ let type2; //since there will be two waves on the same screen type and type2 are
 let count=true;//booleans for counting score
 let fifty=false;//boolean for the function drawFfity(y) to be called
 let flashing= false; //if flashing text at the end is flashing
-let name; //name of the player
+let alias; //name of the player
 
 
 
@@ -67,7 +68,7 @@ function startScreen(){
 	c.textAlign = "center";
 	c.fillText("Press  Space  to start",200,300);
 	c.font = "10px Lucida Console";
-	fontMac("bold 10px");
+	fontMac("10px");
 	c.fillText("Read the instructions below if it's your first time.",200,330);
 	c.lineWidth=3;
 	c.strokeRect(118,280,120,26);
@@ -266,22 +267,30 @@ function drawFilled(type, y){
 //draws the score
 function drawScore(){
 	c.fillStyle="black";
+	c.font = "bold 15px Lucida Console";
+	fontMac("bold 15px");
+	c.textAlign = "left";
+	c.fillText("Score",0,15);
 	c.font = "15px Lucida Console";
+	fontMac("15px");
+	c.fillText(score,0,30);
+	c.font = "bold 15px Lucida Console";
 	fontMac("bold 15px");
 	c.textAlign = "right";
-	c.fillText("Score",400,15);
-	c.fillText("",400,15);
-	c.fillText(score,400,30);
+	c.fillText("Best",400,15);
+	c.font = "15px Lucida Console";
+	fontMac("15px");
+	c.fillText(hiScore,400,30);
 }
 
 //the function that defines the type of the filled rectangles (wave obstacles)
 function rand() {
 	if (score>=0 && score<=5 ){
-		return Math.floor(Math.random() * 3); //only first
+		return Math.floor(Math.random() * 3); //only first types
 	} else if (score>5 && score<=15) {
-		return (Math.floor(Math.random() * 3)+3);
+		return (Math.floor(Math.random() * 3)+3); //other 3 types
 	} else if (score>15 && score<30) {
-		return Math.floor(Math.random() * 6);
+		return Math.floor(Math.random() * 6); //all first 6 types
 	} else if (score==30) { //player needs to be introduced to this new wave at least once when the speed is still pretty low
 		return 6;
 	} else if (score>30){
@@ -346,6 +355,9 @@ function draw(){
 			clap.play();
 		}
 	}
+	if (hiScore<score){
+		hiScore=hiScore+1;
+	}
 	//speed starts to go up from score=30 
 	if(score>30){ //speeding up the waves after the player reach a score of 30
 		dy=18+Math.floor(0.4*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
@@ -376,32 +388,30 @@ function gameOver(){
 	setTimeout(function(){ //displays Game Over and score after 0.6s
 		c.fillStyle="black";
 		c.font = "25px Lucida Console";
-		fontMac("bold 25px");
+		fontMac("25px");
 		c.textAlign = "center";
 		c.fillText("Game Over",200,300);
 		c.font = "15px Lucida Console";
-		fontMac("bold 15px");
-		c.fillText("Score: "+score,200,315);}
+		fontMac("15px");
+		c.fillText("Score: "+score,200,315);
+		c.font = "12px Lucida Console";
+		fontMac("12px");
+		c.fillText("Best: "+hiScore,200,330);}
 		,600);
 	setTimeout(function(){ //gameOver soundtrack
 		go.play(); //to stop it, you have to go.pause(); and sounds/audio work only on myu browser if a key was pressed or if a mouse click happened on the page after it loaded
 		go.loop=true;}
 		,600);
 	setTimeout(function(){
-		if(name == null){
-			name = prompt("Enter your name/alias for the leaderboard (one word)");
-			if (name==""){
-				name=null;
+		if(alias == null){
+			alias = prompt("Enter your name/alias for the leaderboard (one word)");
+			if (alias==""){
+				alias=null;
 			}
 		}
 		highScore();}
 		,1800); 
 }
-//Instead of this I should do an alert to ask the player a second later if they want to register their score. 
-//If they accept, I take their username and then show them the highscore board
-//If they refuse, I just switch to the highscore board
-//On the highscore board there will be a saying: Press space if you want to go back to the start menu.
-//Only ask if they are in the top 10.
 
 function highScore(){ //to display the highscores at the very end
 	c.clearRect(0,0,400,600);
@@ -430,7 +440,7 @@ function flashingText(){
 			c.clearRect(0,570,400,25); //used the console and strokeRect() to find out these coordinates
 		}
 		count=count+1;
-	;},250);	
+	},250);	
 }	
 
 /*
