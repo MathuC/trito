@@ -9,3 +9,7 @@ Updates:
 2. I finished the game on the 18th at night but want to add more features, like the leaderboard, so I will still be working on this after the 19th (won the bet).
 
 3.Completely changed the controls after a friend who tested my game told me about keyup event in JS, which made me go back to my original plan of using WASD as controls instead of 7 keys (A,S,D,J,K,L,Space) (since I first erroneously thought there was only a keydown event and that there was no way of knowing if a key was "being pressed")
+	A and D are for the positions Left and Right
+	S and W are for dividing the square into 2 parts or 3 parts.
+
+4.Added two more combinations of keys (2 more: W-A and W-D)

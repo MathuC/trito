@@ -22,12 +22,14 @@ point.src= "audio/point.wav";
 let clap= new Audio();
 clap.src="audio/clap.wav";
 
+let trial; //interval for the beginning to let players try out the keyboard controls 
+let trialBool=true; //if the trial keyboard control is going to happen, happening, or just happened, this is true
 let trito; //global variable that will store the interval (game loop)
 let player; //global variable which stores the position of the player 
-let a; //these are the keys and they are false since they are up.
-let d;
-let s;
-let w;
+let a=false; //these are the keys and they are false since they are up.
+let d=false;
+let s=false;
+let w=false;
 let score=0;//game score
 let hiScore=0; //highscore
 let game= false;//if the game has started, need this since if not, everytime the trisected square command would be received, it would restart the whole game :/
@@ -36,8 +38,7 @@ let y2 = -72; //position of the second wave of filled rectangle
 let y3 = -125; //since it's height is slightly bigger than the waves is starts a little higher
 let filled1 = true; //boolean for the first wave of filled rectangles
 let filled2 = false; //boolean for the second wave of filled rectangles
-let dy=18; //speed of the waves
-let ddy=8; //after a score of 50, the speed will increase, so this var is the acceleration of the waves till they reach a maximum speed
+let dy=17; //speed of the waves
 let sep=350; //separation between the two waves
 let type=1; //first wave is the easiest one (Answer: KeyS)
 let type2; //since there will be two waves on the same screen type and type2 are distinct types
@@ -58,6 +59,14 @@ instructions.src = "img/instructions.png"; // It has to be in this order for the
 
 
 
+trial = setInterval(function(){
+	c.clearRect(0,490,400,110);
+	position();
+	drawPlayer();
+},10);
+
+
+
 
 
 //The start screen
@@ -66,15 +75,25 @@ function startScreen(){
 	c.font = "bold 25px Lucida Console"; 
 	fontMac("bold 25px");
 	c.textAlign = "center";
-	c.fillText("Press  Space  to start",200,300);
+	c.fillText("Press  Space  to start",200,50);
 	c.font = "10px Lucida Console";
 	fontMac("10px");
-	c.fillText("Read the instructions below if it's your first time.",200,330);
+	c.fillText("Read the instructions below if it's your first time.",200,80);
 	c.lineWidth=3;
-	c.strokeRect(118,280,120,26);
+	c.strokeRect(118,30,120,26);
 	c.lineWidth=3;
-	c.drawImage(instructions,97,400,200,140); //smaller
-	//c.drawImage(instructions,75,400,250,180); //bigger 
+	c.font = "bold 13px Lucida Console";
+	fontMac("bold 13px");
+	c.textAlign = "left";
+	c.fillText("INSTRUCTIONS",0,190);
+	c.font = "13px Lucida Console";
+	fontMac("13px");
+	c.textAlign = "center";
+	c.fillText("Goal: Dodge the rectangles coming your way",200,210);
+	c.fillText("Controls:                                         ",200,230);
+	c.drawImage(instructions,97,240,200,140); 
+	c.fillText("Try the controls on this page by using the 4 keys",200,400);
+	c.fillText("Hint: Combine different keys (A,S,D,F) together",200,420);
 }
 
 
@@ -89,8 +108,6 @@ function reset(){ //If the player wants to play the game again
 	y3 = -125; 
 	filled1 = true; 
 	filled2 = false; 
-	dy=18; 
-	ddy=8; 
 	sep=350; 
 	type=1; 
 	type2; 
@@ -119,6 +136,10 @@ function down(event){ //function down receives the event sent by addEventListene
 		reset(); //If the player is playing multiple games
 		go.pause();
 		game = true;
+		if (trialBool==true){
+			clearInterval(trial);
+			trialBool=false;
+		}
 		gameStart(); 
 	}
 }
@@ -167,8 +188,12 @@ function gameStart(){
 //I started this game with 7 controls ASD for the square position and JKL for the half-square position and space for the trisected squares
 //After a friend told me that keyup is a thing in JS, something I overlooked I decided to go back to my original plan when starting this game and to only use 4 controls A,S,D,W like the typical games which will make the learning curve more shallow
 function position(){
-	if (w==true){
-		player="3";
+	if (a==false && d==false && s==false && w==true){
+		player="m3";
+	} else if (a==true && d==false  && s==false && w==true){
+		player="l3";
+	} else if (a==false && d==true && s==false && w==true){
+		player="r3";
 	} else if (a==true && d==false && s==true && w==false){
 		player="l2";
 	} else if (a==false && d==true && s==true && w==false){
@@ -183,8 +208,6 @@ function position(){
 		player="m";
 	} //if both a and d are pressed down at the same time, then the past position is kept
 }
-
-
 
 //draws the player
 function drawPlayer(){
@@ -214,15 +237,27 @@ function drawPlayer(){
 		c.fillRect(283,500,35,70);
 		c.strokeRect(83,500,35,70);
 		c.strokeRect(283,500,35,70);
-	} else if (player == "3") { //70/3 is ~23, not 18 but I did this so that the 1/3 square is visually different from the 1/2 square so that players see it easily
+	} else if (player == "m3") { //70/3 is ~23, not 18 but I did this so that the 1/3 square is visually different from the 1/2 square so that players see it easily
 		c.fillRect(91,500,18,70);
 		c.fillRect(191,500,18,70);
 		c.fillRect(291,500,18,70);
 		c.strokeRect(91,500,18,70);
 		c.strokeRect(191,500,18,70);
 		c.strokeRect(291,500,18,70);
+	} else if (player == "l3"){
+		c.fillRect(91,500,18,70);
+		c.fillRect(177,500,46,70);
+		c.strokeRect(91,500,18,70);
+		c.strokeRect(177,500,46,70);
+	} else if (player == "r3") {
+		c.fillRect(291,500,18,70);
+		c.fillRect(177,500,46,70);
+		c.strokeRect(291,500,18,70);
+		c.strokeRect(177,500,46,70);
 	}
 }
+
+
 
 //draws filled rectangles/obstacles
 function drawFilled(type, y){
@@ -230,37 +265,50 @@ function drawFilled(type, y){
 	if (type == 0){ //for A
 		c.fillRect(165,y,70,70);
 		c.fillRect(265,y,70,70);
-	} else if (type == 1) { //for S
+	} else if (type == 1) { //for nothing
 		c.fillRect(65,y,70,70);
 		c.fillRect(265,y,70,70);
 	} else if (type == 2) { //for D
 		c.fillRect(65,y,70,70);
 		c.fillRect(165,y,70,70);
-	} else if (type == 3) { //for J
+	} else if (type == 3) { //for S&A
 		c.fillRect(265,y,70,70);
 		c.fillRect(65,y,18,70);
 		c.fillRect(118,y,18,70);
 		c.fillRect(165,y,18,70);
 		c.fillRect(218,y,18,70);
-	} else if (type == 4) { //for L
+	} else if (type == 4) { //for S&D
 		c.fillRect(65,y,70,70);
 		c.fillRect(165,y,18,70);
 		c.fillRect(218,y,18,70);
 		c.fillRect(265,y,18,70);
 		c.fillRect(318,y,18,70);
-	} else if (type == 5) { //for K 
+	} else if (type == 5) { //for S
 		c.fillRect(165,y,70,70);
 		c.fillRect(65,y,18,70);
 		c.fillRect(118,y,18,70);
 		c.fillRect(265,y,18,70);
 		c.fillRect(318,y,18,70);
-	} else if (type == 6) { //for Space
+	} else if (type == 6) { //for W
 		c.fillRect(65,y,26,70);
 		c.fillRect(109,y,26,70);
 		c.fillRect(165,y,26,70);
 		c.fillRect(209,y,26,70);
 		c.fillRect(265,y,26,70);
 		c.fillRect(309,y,26,70);
+	} else if (type == 7) { //for W&A
+		c.fillRect(265,y,70,70);
+		c.fillRect(65,y,26,70);
+		c.fillRect(109,y,26,70);
+		c.fillRect(165,y,12,70);
+		c.fillRect(223,y,12,70);
+		
+	} else if (type == 8) { //for W&D
+		c.fillRect(65,y,70,70);
+		c.fillRect(265,y,26,70);
+		c.fillRect(309,y,26,70);
+		c.fillRect(165,y,12,70);
+		c.fillRect(223,y,12,70);
 	}
 }
 
@@ -289,12 +337,12 @@ function rand() {
 		return Math.floor(Math.random() * 3); //only first types
 	} else if (score>5 && score<=15) {
 		return (Math.floor(Math.random() * 3)+3); //other 3 types
-	} else if (score>15 && score<30) {
+	} else if (score>15 && score<=30) {
 		return Math.floor(Math.random() * 6); //all first 6 types
-	} else if (score==30) { //player needs to be introduced to this new wave at least once when the speed is still pretty low
-		return 6;
-	} else if (score>30){
+	} else if (score>30 && score<=40){
 		return Math.floor(Math.random() * 7);
+	} else if (score>40){
+		return Math.floor(Math.random() * 9);
 	}
 }
 
@@ -359,8 +407,8 @@ function draw(){
 		hiScore=hiScore+1;
 	}
 	//speed starts to go up from score=30 
-	if(score>30){ //speeding up the waves after the player reach a score of 30
-		dy=18+Math.floor(0.4*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
+	if(score>50){ //speeding up the waves after the player reach a score of 50
+		dy=17+Math.floor(0.4*(Math.sqrt(score-50))); //using a squrt function made a lot of sense since you want the speed to increase 
 		//quickly at the beginning so it's not boring but you want it to stop increasing so quickly towards the end since the difficulty increase between 15 and 20 is a lot lower than the difficulty increase between 30 and 35
 	} 
 	position(); //according to what keys are down/up this says which position the player has to be and this current funtion draws the player accordingly to the position
@@ -368,13 +416,13 @@ function draw(){
 	console.log("Speed:"+dy); //debugging
 
 	//GameOver
-	if (y1>430 && y1<570){ 
-		if ((type==0 && player!="l") || (type==1 && player!="m") || (type==2 && player!="r") || (type==3 && player!="l2") || (type==4 && player!="r2") || (type==5 && player!="m2") || (type==6 && player!="3")) {
+	if (y1>432 && y1<570){ 
+		if ((type==0 && player!="l") || (type==1 && player!="m") || (type==2 && player!="r") || (type==3 && player!="l2") || (type==4 && player!="r2") || (type==5 && player!="m2") || (type==6 && player!="m3") || (type==7 && player!="l3") || (type==8 && player!="r3")) {
 			gameOver(); //stops animation
 		}
 	}
 	if (y2>432 && y2<570) {
-		if ((type2==0 && player!="l") || (type2==1 && player!="m") || (type2==2 && player!="r") || (type2==3 && player!="l2") || (type2==4 && player!="r2") || (type2==5 && player!="m2") || (type2==6 && player!="3")) {
+		if ((type2==0 && player!="l") || (type2==1 && player!="m") || (type2==2 && player!="r") || (type2==3 && player!="l2") || (type2==4 && player!="r2") || (type2==5 && player!="m2") || (type2==6 && player!="m3") || (type2==7 && player!="l3") || (type2==8 && player!="r3")) {
 			gameOver(); //stops animation
 		}
 	}
