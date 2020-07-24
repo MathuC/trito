@@ -2,6 +2,7 @@ var canvas = document.getElementById("trito");
 
 var c = canvas.getContext('2d');
 
+var edddddd;
 
 //When score is a fifty multiple the score is displayed in big accompanied with this image
 var banner = new Image();
@@ -54,7 +55,7 @@ let alias; //name of the player
 //BEGINNING OF EVERYTHING, then addEventListener starts the whole game
 instructions.onload= function(){ //if I don't do this and use function startscreen(); alone instead, then the canvas loads before the image (instructions.png) loads and the image is not here. Write "startScreen();" instead of this big block and see for yourself
 	startScreen();
-} 
+};
 instructions.src = "img/instructions.png"; // It has to be in this order for the image to load and work: 1. var img = new Image() 2. img.onload = function(){ something you want to do} 3.img.src=img/img.png
 
 
@@ -92,7 +93,7 @@ function startScreen(){
 	c.fillText("Goal: Dodge the rectangles coming your way",200,230+y2);
 	c.fillText("Controls:                                         ",200,250+y2);
 	c.drawImage(instructions,97,240+y2,200,140); 
-	c.fillText("Try the controls on this page by using the 4 keys",200,385+y2);
+	c.fillText("Try the controls on right now by using the 4 keys",200,385+y2);
 	c.fillText("Hint: Try combinations of two/three keys ",200,405+y2);
 }
 
@@ -177,7 +178,7 @@ function gameStart(){
 	d=false;
 	s=false;
 	w=false; //player's square starts in the middle by default
-	track.play()
+	track.play();
 	track.loop=true;
 	trito = setInterval(draw,10); 
 }
@@ -212,7 +213,7 @@ function position(){
 	} else if (a==false && d==true && s==true && w==true){ 
 		player="ro";
 	} else if (a==false && d==false && s==false && w==false){ //This returning central position when all keys are false is necessary because without this when you do combinations of keys and let go of that combination, it doesn't stay as the combination it changed as the last left key which can be confusing and aesthetically annoying
-		player="n";
+		player="m";
 	} 
 }
 
@@ -275,7 +276,7 @@ function drawPlayer(){
 		c.fillRect(265,500,70,70);
 		c.strokeRect(265,500,70,70);
 	} else if (player == "n") { 
-		c.strokeStyle = "rgba(0, 0, 0, 0.33)";
+		c.strokeStyle = "rgba(0,0,0,0.15)";
 		c.fillRect(65,500,70,70);
 		c.fillRect(165,500,70,70);
 		c.fillRect(265,500,70,70);
@@ -414,11 +415,11 @@ function rand() {
 		return Math.floor(Math.random() * 6); 
 	} else if (score>20 && score<=35){
 		return Math.floor(Math.random() * 7);
-	} else if (score>35 && score<=50){
+	} else if (score>35 && score<=60){
 		return Math.floor(Math.random() * 9);
-	} else if (score>50 && score<=65) {
+	} else if (score>60 && score<=90) {
 		return Math.floor(Math.random() * 10);
-	} else if (score>65) {
+	} else if (score>90) {
 		return Math.floor(Math.random() * 12);
 	}
 }
@@ -509,7 +510,7 @@ function gameOver(){
 	clearInterval(trito);
 	track.pause(); //stopped the game soundtrack
 	hit.play(); //hit sound
-	setTimeout(function(){c.clearRect(0,0,400,600);},2000); //erases previous frame after 0.6 seconds
+	setTimeout(function(){c.clearRect(0,0,400,600);},600); //erases previous frame after 0.6 seconds
 	setTimeout(function(){ //displays Game Over and score after 0.6s
 		c.fillStyle="black";
 		c.font = "25px Lucida Console";
@@ -544,6 +545,7 @@ function highScore(){ //to display the highscores at the very end
 	c.font = "bold 25px Lucida Console";
 	fontMac("bold 25px");
 	c.textAlign = "center";
+	c.fillStyle="Black";
 	c.fillText("High Scores",200,30);
 	flashingText();
 	game=false;
