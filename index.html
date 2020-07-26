@@ -27,7 +27,7 @@
 		//Changing html element fonts for systems that aren't Win32 (most windows PCs overriding CSS for systems that are not Win32 which probably don't support Lucida Console Font
 		var ids=["title", "p1", "p2"];
 		if (navigator.platform!="Win32"){ //If it's not a PC
-			for(let i =0; i<2; i++){
+			for(let i =0; i<3; i++){
 				document.getElementById(ids[i]).style.fontFamily="Courier";
 			}
 		}

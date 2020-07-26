@@ -2,7 +2,6 @@ var canvas = document.getElementById("trito");
 
 var c = canvas.getContext('2d');
 
-var edddddd;
 
 //When score is a fifty multiple the score is displayed in big accompanied with this image
 var banner = new Image();
@@ -48,8 +47,9 @@ let count=true;//booleans for counting score
 let fifty=false;//boolean for the function drawFfity(y) to be called
 let flashing= false; //if flashing text at the end is flashing
 let alias; //name of the player
-
-
+let winners=[]; //arrays with alias and scores of highscores
+let scores=[]; 
+let data; //object that stores the JSON file sent back by MySql (highscores)
 
 
 //BEGINNING OF EVERYTHING, then addEventListener starts the whole game
@@ -65,8 +65,6 @@ trial = setInterval(function(){
 	position();
 	drawPlayer();
 },10);
-
-
 
 
 
@@ -114,6 +112,8 @@ function reset(){ //If the player wants to play the game again
 	if (flashing==true){
 		clearInterval(loop);
 	}
+	winners=[]; //need to reset this since without this, there would be duplicate scores
+	scores=[]; 
 }
 
 
@@ -491,7 +491,7 @@ function draw(){
 	} 
 	position(); //according to what keys are down/up this says which position the player has to be and this current funtion draws the player accordingly to the position
 	drawPlayer(); //draws player on top of everyting else
-	console.log("Speed:"+dy); //debugging
+	//console.log("Speed:"+dy); //debugging
 
 	//GameOver
 	if (y1>432 && y1<570){ 
@@ -531,8 +531,14 @@ function gameOver(){
 	setTimeout(function(){
 		if(alias == null){
 			alias = prompt("Enter your name/alias for the leaderboard (one word)");
-			if (alias==""){
+			if (alias!=null && alias.trim()==""){
 				alias=null;
+			} else if (alias!=null) {
+				alias=alias.trim(); //erase space before and after
+				let temp=alias.split(" ");
+				alias=temp[0];
+				alias= alias.substring(0, 15);
+				alias=alias.toLowerCase();
 			}
 		}
 		highScore();}
@@ -547,8 +553,68 @@ function highScore(){ //to display the highscores at the very end
 	c.textAlign = "center";
 	c.fillStyle="Black";
 	c.fillText("High Scores",200,30);
-	flashingText();
+	getData();
+	c.textAlign = "center";
+	flashingText(a);
 	game=false;
+}
+
+
+function bubbleSortScores(){
+	subL=scores.length-1;
+	for (var i=0; subL!=0; i++) {
+		for (var j=0; j<subL; j++){
+			if (scores[j]<scores[j+1]) {
+				temp1=scores[j];
+				temp2=winners[j];
+				scores[j]=scores[j+1];
+				winners[j]=winners[j+1];
+				scores[j+1]=temp1;
+				winners[j+1]=temp2;
+			}
+		}
+		subL=subL-1;
+	}
+}
+
+//Calls a php script that gets data from mysql table
+function getData(){
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET", "data.php", true);
+	ajax.send();
+ajax.onload= function(){
+		//alert(this.responseText); //debug: to get any error messages from data.php as alerts
+		data=JSON.parse(this.responseText); //convert data from MySQL table from JSON string to javascript object
+		for (var i=0; i<data.length; i++){
+			winners.push(data[i].alias);
+			scores.push(parseInt(data[i].score));
+		}
+		bubbleSortScores();
+		leaderboard(); //I have 
+	}
+}
+
+function leaderboard(){
+	let y;
+	c.font = "bold 19px Lucida Console";
+	fontMac("bold 19px");
+	c.textAlign = "left";
+	for (var i=0; i < 10; i++){
+		y=50*i+85;
+		if (scores[i]!=null){
+			if (i<9){ //so all the aliases are lined up properly
+			c.textAlign = "left";
+			c.fillText((i+1)+". "+winners[i], 15, y);
+			c.textAlign = "right";
+			c.fillText(scores[i], 385 , y);
+			} else {
+			c.textAlign = "left";
+			c.fillText((i+1)+"."+winners[i], 15, y);	
+			c.textAlign = "right";
+			c.fillText(scores[i], 385, y);
+			}
+		}
+	}		
 }
 
 //flashing text at the bottom of the screen of highscores saying you can press any keys to go back to the start menu
@@ -601,5 +667,21 @@ Big error4: JS doesn't doesn't make an array of references when you define an ar
 makes an array of the values of those variables. So if you change something in a position of the array
 like array[0]=100, it won't change the variable that you assigned at position-0 to 100, it will just change
 the array
+
+Big error5:
+I made a function getData that used ajax to get data from PHP. I used the onload method in there
+This getData function assigned the data to various arrays defined at the beginning and sorted the 
+data at the end using another function called bubblesort which was a perfect function (bubble...)
+I made another function called leaderboard that drew the leaderboard according to those sorted
+arrays.
+I called both of them one after the other
+getData();
+leaderboard();
+near the bottom in the function highscore (which drew highscore title and had the flashing text
+What happened, is that getData() started but since it is asynchronous, while it's not done
+(onload) the other one started and the other one draws the scores so they were undefined.
+FIX: Call getData() in highscore. Call leaderboard() in the onload function inside getData
+and now leaderboard will only run when getData is loaded.
+Rule of thumb: When something is asynchronous (eventlisteners, onload...), always make one function call the other function when it is done.
 
 */
