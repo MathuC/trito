@@ -14,11 +14,11 @@ to play the game.
 
 
 ### Components
-1. `canvas.js` has the whole game in a canvas that draws every 10 milliseconds (100 times per second) so that the animation is smooth.
+`canvas.js` has the whole game in a canvas that draws every 10 milliseconds (100 times per second) so that the animation is smooth.
 
-2.`index.html` has the main structure of the page, the title of the page and few paragraphs below the canvas.
+`index.html` has the main structure of the page, the title of the page and few paragraphs below the canvas.
 
-3.`style.css` has few informations about the background colour and the font of texts.
+`style.css` has few informations about the background colour and the font of texts.
 
 
 ### Terminology
