@@ -1,6 +1,6 @@
 # Trito
 
-### Introduction
+## Introduction
 Trito is a simple javascript canvas game to play on computers. I thought of the idea and design for this simple game for starting to learn Javascript and I made it exculsively using documentation online (mostly pdf's).
 banner.png, instructions.png, corona.wav, gameOver.wav and point.wav were entirely made by me.
 
@@ -13,7 +13,7 @@ mathusan.net
 to play the game.
 
 
-### Components
+## Components
 `canvas.js` has the whole game in a canvas that draws every 10 milliseconds (100 times per second) so that the animation is smooth.
 
 `index.html` has the main structure of the page, the title of the page and few paragraphs below the canvas.
@@ -21,7 +21,7 @@ to play the game.
 `style.css` has few informations about the background colour and the font of texts.
 
 
-### Terminology
+## Terminology
 `score` is the number of waves of rectangles the player has dodged.
 
 `draw()` is the function that draws one frame of the game. It draws the ennemi rectangles, the player's rectangle(s), the score, the highscore...
@@ -43,7 +43,7 @@ to play the game.
 *I didn't explain everything here since the files have an extensive amount of comments and are very easy to understand.*
 
 
-### Big Changes
+## Big Changes
 1. I started coding this project on the 16th of July 2020. I need to finish this on the 19th of July 2020 at 11:59PM (challenge to myself).
 
 2. I finished the game on the 18th at night but want to add more features, like the leaderboard, so I will still be working on this after the 19th (won the bet).
@@ -60,6 +60,6 @@ to play the game.
 `mathusan.net` forwards anyobdy to the website where the game is running.
 
 
-### Conclusion
+## Conclusion
 I never used `javascript`, `PHP` or `MySQL` before so this project made me learn all those in about 10 days which was stressful at times, but these are used extensively in web developpement, something that might be in my carreer path.
-This whole ongoing process was and is for most of the times extremely fun since I love designing, making and playing videogames.
+This whole ongoing process was and is for the most part extremely fun since I love designing, making and playing videogames.
