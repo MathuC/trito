@@ -53,6 +53,9 @@ let data; //object that stores the JSON file sent back by MySql (highscores)
 
 
 //BEGINNING OF EVERYTHING, then addEventListener starts the whole game
+
+//fetch database information. We need this early and not right before drawing the leaderboard since if the player entered an alias,
+//we need to check right after the player played if there is a duplicate alias and if that alias has a smaller score to see if we need to update/insert or do nothing
 instructions.onload= function(){ //if I don't do this and use function startscreen(); alone instead, then the canvas loads before the image (instructions.png) loads and the image is not here. Write "startScreen();" instead of this big block and see for yourself
 	startScreen();
 };
@@ -114,6 +117,7 @@ function reset(){ //If the player wants to play the game again
 	}
 	winners=[]; //need to reset this since without this, there would be duplicate scores
 	scores=[]; 
+	updateScores();
 }
 
 
@@ -531,18 +535,25 @@ function gameOver(){
 	setTimeout(function(){
 		if(alias == null){
 			alias = prompt("Enter your name/alias for the leaderboard (one word)");
-			if (alias!=null && alias.trim()==""){
-				alias=null;
-			} else if (alias!=null) {
-				alias=alias.trim(); //erase space before and after
-				let temp=alias.split(" ");
-				alias=temp[0];
-				alias= alias.substring(0, 15);
-				alias=alias.toLowerCase();
+			if (alias == null){ //if the player responds null again
+				sendData(alias, hiScore);
+			} else {
+				if (alias!=null && alias.trim()==""){ //if the player responds with ""
+					alias=null;
+					sendData(alias, hiScore);
+				} else if (alias!=null) { //if the player responds with ""
+					alias=alias.trim(); //erase space before and after
+					let temp=alias.split(" ");
+					alias=temp[0];
+					alias= alias.substring(0, 15);
+					alias=alias.toLowerCase();
+					sendData(alias, hiScore);
+				}
 			}
+		} else {
+			sendData(alias, hiScore);
 		}
-		highScore();}
-		,1800); 
+	},1800); 
 }
 
 function highScore(){ //to display the highscores at the very end
@@ -555,7 +566,7 @@ function highScore(){ //to display the highscores at the very end
 	c.fillText("High Scores",200,30);
 	getData();
 	c.textAlign = "center";
-	flashingText(a);
+	flashingText();
 	game=false;
 }
 
@@ -577,22 +588,83 @@ function bubbleSortScores(){
 	}
 }
 
+
 //Calls a php script that gets data from mysql table
+//function getData() but this version doesn't call other functions when it's done. It is only used to update the lists scores and winners
+//It will be used at the beginning to pull data since getData will be used just before showing the leaderbord and you need to know before that
+//if the alias that the player entered was already in it and his hiscore is better than the score in it, it should be updated and not entered as another record which will
+//cause duplicate aliases with different scores which is FINE but looks messy and might discourage showing 10 different people in the leaderboard which is the endgoal
+function updateScores() {
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET", "data.php", true);
+	ajax.send();
+	ajax.onload= function(){
+		//console.log(this.responseText); //debug: to get any error messages from data.php as alerts
+		data=JSON.parse(this.responseText); //convert data from MySQL table from JSON string to javascript object
+		for (var i=0; i<data.length; i++){
+			winners.push(data[i].alias);
+			scores.push(parseInt(data[i].score));
+		}
+	}
+}
+
+
+ function sendData(aliasArg, scoreArg) {
+	 if (alias == null) { //|| score<hiScore is not a correct code to add here since if the score is smaller than hiscore but the user didn't enter the alias in the past game it is possible that his hiscore would never be entered into the database, so the current code is correct 
+		highScore(); 
+	 } else {
+		//variable that is used to see if we need to update the score for an already existing alias
+		 var update=0; //in php this is sent as a string and the string "false" is not false but the string "0" is considered false 
+		 var index=winners.indexOf(alias);
+		 if (scores[index]<hiScore){
+			update=1; 
+		 }
+		 var ajax= new XMLHttpRequest();
+		 ajax.open("GET", "add.php?alias="+aliasArg+"&score="+scoreArg+"&update="+update, true); //sending data to php script
+		 ajax.send();
+		 ajax.onload= function() {
+			console.log(this.responseText); //debug
+			highScore();
+		}
+	}
+}
+
+//like updatesScores() but also calls to other functions towards the end
+//We need to pull data every game since, every game there might be updates to the scoreboard, like if the player surpasses his hiScore, this is being sent to the database, but not inside this program so we need to read the databse after each game before drawing the highscore on the canvas
 function getData(){
 	var ajax = new XMLHttpRequest();
 	ajax.open("GET", "data.php", true);
 	ajax.send();
-ajax.onload= function(){
-		//alert(this.responseText); //debug: to get any error messages from data.php as alerts
+	winners=[]; //need to reset this so it doesn't interfere with updateScores() which is called in reset(), without this: duplicates in leaderboard
+	scores=[];
+	ajax.onload= function(){
+		//console.log(this.responseText); //debug: to get any error messages from data.php as alerts
 		data=JSON.parse(this.responseText); //convert data from MySQL table from JSON string to javascript object
 		for (var i=0; i<data.length; i++){
 			winners.push(data[i].alias);
 			scores.push(parseInt(data[i].score));
 		}
 		bubbleSortScores();
-		leaderboard(); //I have 
+		deleteData(); //there is a possibility of 1 record having been added since sendData() has been called and if records surpass "maxRecords", one record will be deleted
 	}
 }
+
+//to not crowd the database with too many records (since only the 10 current are actually useful), any record that falls below the "maxRecords"th position is erased.
+function deleteData(){
+	var maxRecords = 10;
+	if (winners.length>maxRecords){
+		var ajax= new XMLHttpRequest();
+		ajax.open("GET", "delete.php?alias="+winners[maxRecords], true); //sending data to php script
+		ajax.send();
+		ajax.onload= function() {
+			console.log(this.responseText); //debug
+			leaderboard();
+		}
+	} else {
+		leaderboard();
+	}
+}
+	 
 
 function leaderboard(){
 	let y;
@@ -664,9 +736,8 @@ possibility of one key to be used for two things (trisected square & gamestart) 
 eventlistener direction.
 
 Big error4: JS doesn't doesn't make an array of references when you define an array of variables it 
-makes an array of the values of those variables. So if you change something in a position of the array
-like array[0]=100, it won't change the variable that you assigned at position-0 to 100, it will just change
-the array
+makes an array of the values of those variables. So if you change one of the variables, it won't change
+what is in the array.
 
 Big error5:
 I made a function getData that used ajax to get data from PHP. I used the onload method in there
