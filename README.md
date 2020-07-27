@@ -44,7 +44,7 @@ to play the game.
 
 
 ### Big Changes
-1. I started coding this project on the 16th of July 2020.I need to finish this on the 19th of July 2020 at 11:59PM.
+1. I started coding this project on the 16th of July 2020. I need to finish this on the 19th of July 2020 at 11:59PM (challenge to myself).
 
 2. I finished the game on the 18th at night but want to add more features, like the leaderboard, so I will still be working on this after the 19th (won the bet).
 
