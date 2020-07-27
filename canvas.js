@@ -102,9 +102,9 @@ function startScreen(){
 function reset(){ //If the player wants to play the game again
 	score=0;
 	dy=startdy;
-	y1 = -72; 
-	y2 = -72; 
-	y3 = -125; 
+	y1 = -72;
+	y2 = -72;
+	y3 = -125;
 	filled1 = true; 
 	filled2 = false; 
 	sep=350; 
@@ -421,9 +421,9 @@ function rand() {
 		return Math.floor(Math.random() * 7);
 	} else if (score>35 && score<=60){
 		return Math.floor(Math.random() * 9);
-	} else if (score>60 && score<=200) {
+	} else if (score>60 && score<=250) {
 		return Math.floor(Math.random() * 10);
-	} else if (score>200) { //from 90 to 200 here since recently found out that most keyboards (unlike gaming keyboards) don't register 3 keys pressed together at once. By putting it at 200, which nearly no one will reach except really good gamers it makes it fair.
+	} else if (score>250) { //from 250 here since recently found out that most keyboards (unlike gaming keyboards) don't register 3 keys pressed together at once. By putting it at 250, which nearly no one will reach except really good gamers so it makes it fair.
 		return Math.floor(Math.random() * 12);
 	}
 }
@@ -486,11 +486,11 @@ function draw(){
 		}
 	}
 	if (hiScore<score){
-		hiScore=hiScore+1;
+		hiScore=hiScore+1; //to discourage any breakpoints hacks to change scores
 	}
 	//speed starts to go up 
 	if(score>30){ //speeding up the waves 
-		dy=startdy+Math.floor(0.4*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
+		dy=startdy+Math.floor(0.60*(Math.sqrt(score-30))); //using a squrt function made a lot of sense since you want the speed to increase 
 		//quickly at the beginning so it's not boring but you want it to stop increasing so quickly towards the end since the difficulty increase between 15 and 20 is a lot lower than the difficulty increase between 30 and 35
 	} 
 	position(); //according to what keys are down/up this says which position the player has to be and this current funtion draws the player accordingly to the position
@@ -651,7 +651,7 @@ function getData(){
 
 //to not crowd the database with too many records (since only the 10 current are actually useful), any record that falls below the "maxRecords"th position is erased.
 function deleteData(){
-	var maxRecords = 10;
+	var maxRecords = 30;  //in case I need to erase records and there isn't an empty space 
 	if (winners.length>maxRecords){
 		var ajax= new XMLHttpRequest();
 		ajax.open("GET", "delete.php?alias="+winners[maxRecords], true); //sending data to php script
