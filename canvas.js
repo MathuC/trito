@@ -271,11 +271,11 @@ function drawPlayer(){
 		c.fillStyle="black"
 		c.fillRect(165,500,70,70);
 		c.strokeRect(165,500,70,70);
-	} else if (player== "lo") {
+	} else if (player == "lo") {
 		c.fillStyle="black"
 		c.fillRect(65,500,70,70);
 		c.strokeRect(65,500,70,70);
-	} else if (player== "ro"){
+	} else if (player == "ro"){
 		c.fillStyle="black"
 		c.fillRect(265,500,70,70);
 		c.strokeRect(265,500,70,70);
@@ -421,9 +421,9 @@ function rand() {
 		return Math.floor(Math.random() * 7);
 	} else if (score>35 && score<=60){
 		return Math.floor(Math.random() * 9);
-	} else if (score>60 && score<=90) {
+	} else if (score>60 && score<=200) {
 		return Math.floor(Math.random() * 10);
-	} else if (score>90) {
+	} else if (score>200) { //from 90 to 200 here since recently found out that most keyboards (unlike gaming keyboards) don't register 3 keys pressed together at once. By putting it at 200, which nearly no one will reach except really good gamers it makes it fair.
 		return Math.floor(Math.random() * 12);
 	}
 }
