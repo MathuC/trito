@@ -3,22 +3,22 @@
 	<head>
     	<title>Trito</title>
     	<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Found on https://www.w3schools.com/html/html_responsive.asp to make website a little responsive (which means it caters to mobile devices) -->
 		<link rel="stylesheet" href="style.css" /> 
+		<link rel="shortcut icon" href="img/favicon.PNG">
 	</head>
 
-  	<body>
+  	<body id="body" oncontextmenu="return false;"> <!-- oncontextmenu=="return false;" it basically disables right clicking everywhere, so it might also discourage people from inspect element. Is for when long pressing on computer or laptop screen when in mobile version not to prompt save image menu which is annoyin when debugging and maybe annoying to people playing on their touch computer -->
+		<a style="float:left;font-size:15px;font-family:Courier;margin-left:5px;margin-top:-15px;position: absolute;" href="../index.php">mathusan.net</a>
 		<center>
-			<h1 id="title">Trito</h1>
+		<h1 id="title">Trito</h1>
+		<canvas id="trito" width="400" height="600"></canvas>
+		<script src="canvas.js"></script>
+		<br> <!--This is needed so when long pressing on phone it doesn't select the text below and asks if you want to copy or select all, etc. A <br> or multiple <br> fixes that -->
+		<p id="p1" ><b>By Mathusan Chandramohan</b></p>
+		<p id="p2" style="font-size:12px" >This game gets a lot harder with time.</p>
+		<p id="p3" style="font-size:9px" >You need an anti-ghosting keyboard (most gaming keyboards) after score 150. (this does not apply to mobile devices) </p>
 		</center>
-		<br>
-		<center>
-			<canvas id="trito" width="400" height="600"></canvas>
-			<script src="canvas.js"></script>
-		</center>
-		<br><br>
-		<p id="p1" align="center"><b>By Mathusan Chandramohan</b></p>
-		<p id="p2" style="font-size:12px" align="center">Try to get to 100 points before saying this game is easy.</p>
-		<p id="p3" style="font-size:9px" align="center">You need an anti-ghosting keyboard (most gaming keyboards) after score 250.</p>
 		<!-- The reason why I am putting this script here is because HTML loads from top to bottom. So I tried
 		putting this script in the canvas.js file and what happened is that the title changed font since 
 		that element (title) was created before I called the script, but for the other elements (subtitle, p1-p4)
@@ -31,6 +31,21 @@
 			for(let i =0; i<4; i++){
 				document.getElementById(ids[i]).style.fontFamily="Courier";
 			}
+		}
+		//if the document has scrolling ability, this stops that. 
+		//src for finding scrollElement height src=https://stackoverflow.com/questions/1145850/how-to-get-height-of-entire-document-with-javascript
+		//document.documentElement.scrollHeight //worse then one below since it gives the height of the scrollable part only when scrolling is possible, if not it gives innerHeight of window
+		//document.scrollingElement.offsetHeight //better since it always gives the height of the scrollable part
+		//I found the second one by accident, in the console and it's the better one than the one on SO
+		if (window.innerHeight<document.scrollingElement.offsetHeight) {
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { //I don't want the position to be fixed on a small screen computer like a mac Air
+				document.getElementById("body").style.position="fixed"; 
+			}
+			var ids=["title", "p1", "p2", "p3"];
+			for(let i =0; i<4; i++){
+				document.getElementById(ids[i]).style.lineHeight="11px";
+			}
+			document.getElementById("title").style.fontSize="20px";
 		}
 		</script> 
   	</body>

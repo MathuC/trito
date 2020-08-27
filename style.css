@@ -1,17 +1,47 @@
 body {
+	padding: 0;
+	margin: 0;
 	background: white;
+	overflow: auto;
+    overscroll-behavior: none; /*this is for when in phones you swipe from top to 
+	bottom it refreshes the page, to stop that. It only works if there is overflow 
+	with it for some weird reason. When overscoll-behavior: contain, it works but there 
+	is this shadow glow thing that appears on top, it doesn't do anything but still looks annoying.
+	Found out about this on this official google dev page, which explains everything 
+	about this new feature: https://developers.google.com/web/updates/2017/11/overscroll-behavior
+	
+	SUMMARY: overflow: auto, overscroll-behavior: none, 
+	and document.getElementById("body").style.position="fixed"; in the html file make this
+	website stationary on mobile sites and disable scrolling.
+	*/
+	
+	/*position:/* fixed;/*to disable scrolling when touchmove src: https://stackoverflow.com/questions/16348031/disable-scrolling-when-touch-moving-certain-element */
+	/*Finally I am not using this here since it makes the canvas not centered  on computers so I am enabling it using a script in the html file only on small windows*/
 }
 
 	
 h1, h2, p {
 	font-family: Lucida Console;
-	line-height: 15px;
+	line-height: auto;
 }
+
 
 canvas {
+	padding: 0;
+    margin: 0;
+	display: block;
 	border: 5px solid black;
+	box-sizing: border-box; /*Includes padding and border in the element's total width and height, took me a long time to find a fix for this. Because of this I don't need to put max-width=97% for the canvas to be centered, it is centered at 100% which makes my life easier for translating touch controls into the right coordinates src= src=  https://www.w3schools.com/cssref/css3_pr_box-sizing.asp    */
+	max-width: 100%; 
+	/*It is to make the game more visible in mobile games. width=100% alone also enlarges 
+	the canvas, but max-width only makes the canvas smaller so it fits inside screens but never enlarges 
+	it, so it still looks good in the desktop version. On mobile for some reason max-width: 100% makes the canvas go slightly to the left (BEFORE NOT NOW because of box-sizing) so I have to put 97%
+	Source: https://www.w3schools.com/html/html_responsive.asp*/
+	
+	/*touch-action: none;*/ /*To disable scrolling when touchmove,and it disables it only inside the canvas which is perfect. src=https://stackoverflow.com/questions/16348031/disable-scrolling-when-touch-moving-certain-element */
+	/*Finally not very good since it makes the game very slow and makes it have performance issues. */
 }
 
-.boxed {
+.boxed { 	/*class for html div*/
   border: 2px solid black;
 }
