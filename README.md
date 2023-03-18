@@ -1,13 +1,9 @@
 # Trito
 
 ## Introduction
-Trito is a simple javascript canvas game to play on computers. I thought of the idea and design for this simple game for starting to learn Javascript and I made it exculsively using documentation online (mostly pdf's).
-banner.png, instructions.png, corona.wav, gameOver.wav and point.wav were entirely made by me.
-
-The game: Dodge the rectangles coming your way (from top to bottom).
+Trito is a simple javascript canvas game where you dodge the rectangles coming your way (from top to bottom).
 
 Try it out here: [Trito](https://mathusan.net/Trito/index.html)
-
 
 ## Components
 `canvas.js` has the whole game in a canvas that draws every 10 milliseconds (100 times per second) so that the animation is smooth.
@@ -15,29 +11,6 @@ Try it out here: [Trito](https://mathusan.net/Trito/index.html)
 `index.html` has the main structure of the page, the title of the page and few paragraphs below the canvas.
 
 `style.css` has few informations about the background colour and the font of texts.
-
-
-## Terminology
-`score` is the number of waves of rectangles the player has dodged.
-
-`draw()` is the function that draws one frame of the game. It draws the ennemi rectangles, the player's rectangle(s), the score, the highscore...
-
-`rand()` is a function that uses `Math.random()` to decide which ennemi rectangles will come in the next wave. The pool of possible rectangles go up as the scores go up so the difficulty increases.
-
-`drawFifity()` is a function that draws a congratulatory banner with the current score when the player reaches multiples of 50 in their score.
-
-`trito` is a var that has the interval of `draw` (repeats `draw` every 10 milliseconds).
-
-`winners` is an array with the top scorers that got his data from the database.
-
-`scores` is an array with the corresponding scores of the `winners` (same index).
-
-`dy` is the speed of the incoming rectangles (that the player has to dodge). This increases with the score. 
-
-`sep` is the amount of pixels separating the waves of rectangles (that the player has to dodge). I first planned in this sep going down as the score went up, but that was way too difficult.
-
-*I didn't explain everything here since the files have an extensive amount of comments and are very easy to understand.*
-
 
 ## Big Changes
 1. I started coding this project on the 16th of July 2020. I need to finish this on the 19th of July 2020 at 11:59PM (challenge to myself).
@@ -54,8 +27,3 @@ Try it out here: [Trito](https://mathusan.net/Trito/index.html)
 
 6. The Websites is online (26/07/2020).
 `mathusan.net` forwards anyobdy to the website where the game is running.
-
-
-## Conclusion
-I never used `javascript`, `PHP` or `MySQL` before so this project made me learn all those in about 10 days which was stressful at times, but these are used extensively in web developpement, something that might be in my carreer path.
-This whole ongoing process was and is for the most part extremely fun since I love designing, making and playing videogames.
