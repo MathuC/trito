@@ -2,6 +2,7 @@
 
 ## Introduction
 Trito is a simple javascript canvas game where you dodge the rectangles coming your way (from top to bottom).
+
 Try it out here: [Trito](https://mathusan.net/Trito/index.html)
 
 ## Components
