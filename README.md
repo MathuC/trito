@@ -23,4 +23,4 @@
 5. Finished the server-side scripts (PHP) to interact with a database (MySQL). 
 
 6. The Websites is online (26/07/2020).
-`mathusan.net` forwards anyobdy to the website where the game is running.
+`mathusan.net` forwards anybody to the website where the game is running.
