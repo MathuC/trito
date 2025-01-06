@@ -1,6 +1,6 @@
 # Trito
 
-[Trito](https://mathusan.net/Trito/index.html) is a simple javascript canvas game where you dodge the squares coming your way.
+[Trito](https://mathusan.net/Trito/index.html) is a simple javascript canvas game where you dodge the squares coming your way. Even if it doesn't follow good software engineering principles, I've left it on here because it is the first full-stack website I've ever built and it is also a pretty fun and addicting game.
 
 ## Components
 `canvas.js` has the whole game in a canvas that draws every 10 milliseconds (100 times per second) so that the animation is smooth.
