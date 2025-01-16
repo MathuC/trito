@@ -22,4 +22,4 @@
 
 5. Finished the server-side scripts (PHP) to interact with a database (MySQL). 
 
-6. The Websites was put online with a url on 26/07/2020. 
+6. The Websites was put online on 26/07/2020. 
